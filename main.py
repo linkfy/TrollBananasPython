@@ -4,12 +4,24 @@ import ctypes
 import pyautogui
 import random
 
+class AssetsManager:
+    def __init__(self):
+        self.assets_list = {}
+
+    def add_asset_image(self, file_asset):
+        self.assets_list[file_asset] = None
+        image = PhotoImage(file=file_asset)
+        self.assets_list[file_asset] = image
+
+    def get_asset_image(self, file_asset):
+        return self.assets_list[file_asset]
+
 class Banana:
     def __init__(self, scene, x=0, y=0):
         self.scene = scene
-        self.image = PhotoImage(file='banana1.png')
+        self.image = assetManager.get_asset_image('banana1.png')
         self.image = self.image.subsample(16)
-        self.image_bomb = PhotoImage(file='bomb.png')
+        self.image_bomb = assetManager.get_asset_image('bomb.png')
         self.image_bomb = self.image_bomb.subsample(8)
         self.imageRef = scene.canvas.create_image(x,y,image=self.image)
         self.bomb_status = False
@@ -70,6 +82,8 @@ class Game:
         self.window = self.create_window()
         self.apply_click_through(self.window)
         self.scene = Scene(self.window)
+        assetManager.add_asset_image('banana1.png')
+        assetManager.add_asset_image('bomb.png')
 
     def update(self):
         self.scene.update()
@@ -103,6 +117,7 @@ class Game:
         self.update()
         self.window.mainloop()
 
+assetManager = AssetsManager()
 game = Game()
 game.scene.new_banana(100,100)
 game.start()
